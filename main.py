@@ -1,3 +1,13 @@
+import mysql.connector
+import config as cfg
+
+mydb = mysql.connector.connect(
+    host=cfg.mysql["host"],
+    user=cfg.mysql["user"],
+    password=cfg.mysql["passwd"],
+    auth_plugin='mysql_native_password'
+)
+
 run = True
 
 print("Welcome in agency data manager V1.0")

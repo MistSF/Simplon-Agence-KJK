@@ -7,7 +7,7 @@ TABLES["Geolocation"] = ("""
     CREATE TABLE IF NOT EXISTS Geolocation (
         zip_code_prefix VARCHAR(20) NOT NULL PRIMARY KEY,
         lat FLOAT NOT NULL,
-        lng FLOAT NOT NULL,
+lng FLOAT NOT NULL,
         city VARCHAR(20),
         state VARCHAR(20)
     )"""

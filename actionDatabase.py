@@ -8,7 +8,7 @@ TABLES["Geolocation"] = ("""
         zip_code_prefix VARCHAR(20) NOT NULL PRIMARY KEY,
         lat FLOAT NOT NULL,
         lng FLOAT NOT NULL,
-        city VARCHAR(20),
+        city VARCHAR(40),
         state VARCHAR(20)
     )"""
 )
@@ -18,7 +18,7 @@ TABLES["Customers"] = ("""
         customer_id VARCHAR(40) NOT NULL PRIMARY KEY,
         customer_unique_id VARCHAR(40) NOT NULL, 
         customer_zip_code_prefix VARCHAR(20) NOT NULL,
-        customer_city VARCHAR(20) NOT NULL,
+        customer_city VARCHAR(40) NOT NULL,
         customer_state VARCHAR(20) NOT NULL,
         FOREIGN KEY (customer_zip_code_prefix) REFERENCES Geolocation(zip_code_prefix)
     )"""
@@ -75,7 +75,7 @@ TABLES["Sellers"] = ("""
 TABLES["Products"] = (""" 
     CREATE TABLE IF NOT EXISTS Products (
         product_id VARCHAR(40) NOT NULL PRIMARY KEY,
-        product_category_name VARCHAR(40),
+        product_category_name VARCHAR(80),
         product_name_lenght INT,
         product_description_lenght INT,
         product_photos_qty INT,
@@ -101,6 +101,11 @@ TABLES["Order_items"] = ("""
     )"""
 )
 
+def saveError(name, request, value) :
+    f = open("./Error/{}.txt".format(name), "a")
+    f.write("{} : {}\n{}\n\n".format(name, request, value))
+    f.close()
+
 def createDatabase(cursor, database) :
     request = "CREATE DATABASE {}".format(database)
     try :
@@ -121,20 +126,22 @@ def createTable(cursor) :
 def loadData(cursor, path, name, mydb) :
     print(name)
     data = pd.read_csv(path)
-    for i, x in enumerate(data.iloc(0)) :
+    data.drop_duplicates(subset=[data.columns[0]], keep="first", inplace=True)
+    for x in data.iloc(0) :
         request = "INSERT INTO {} VALUES (".format(name)
         for y in x :
             if type(y) == str :
-                request = request + "'" + str(y) + "', "
+                request = request + "\"" + str(y) + "\", "
+            elif str(y) == 'nan' :
+                request = request + "NULL , "
             else :
                 request =request + str(y) + ", "
         request = request[:-2] + ")"
         try :
             cursor.execute(request)
-            print("data added")
         except mysql.connector.Error as err :
+            saveError(name, request, err)
             print(err)
-        if i == 10 :
-            break
+
     mydb.commit()
     print()

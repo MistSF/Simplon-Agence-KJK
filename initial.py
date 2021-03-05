@@ -9,6 +9,8 @@ mydb = mysql.connector.connect(
     auth_plugin='mysql_native_password'
 )
 
+cursor = mysql.connector.cursor(buffered=True)
+
 ad.createDatabase(cursor, "Agence_KJK")
 ad.createTable(cursor)
 

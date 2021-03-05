@@ -1,5 +1,6 @@
 import mysql.connector
 import config as cfg
+import actionDatabase as ad
 
 mydb = mysql.connector.connect(
     host=cfg.mysql["host"],
@@ -10,7 +11,14 @@ mydb = mysql.connector.connect(
 
 run = True
 
+cursor = mydb.cursor(buffered=True)
+
+ad.createDatabase(cursor, "Agence_KJK")
+ad.createTable(cursor)
+
 print("Welcome in agency data manager V1.0")
+
+ad.loadData(cursor, "./Data/olist_orders_dataset.csv", "Orders")
 
 while run :
     entry = input()
@@ -18,4 +26,3 @@ while run :
     if entry == "quit" :
         run = False
 
-print('Ceci est un test')

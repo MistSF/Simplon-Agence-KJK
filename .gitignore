@@ -1,3 +1,7 @@
 config.py
 __pycache__
+<<<<<<< HEAD
+.vscode
+=======
 Error/*
+>>>>>>> 64decf6f029f6f372033b8480845d7bb80c05e02

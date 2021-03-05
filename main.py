@@ -11,9 +11,14 @@ mydb = mysql.connector.connect(
 
 run = True
 
-ad.createDatabase("Agence-KJK")
+cursor = mydb.cursor(buffered=True)
+
+ad.createDatabase(cursor, "Agence_KJK")
+ad.createTable(cursor)
 
 print("Welcome in agency data manager V1.0")
+
+# ad.loadData(cursor, "./Data/olist_customers_dataset.csv", "Customers")
 
 while run :
     entry = input()

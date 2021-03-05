@@ -1,6 +1,5 @@
 import mysql.connector
 import config as cfg
-import actionDatabase as ad
 
 mydb = mysql.connector.connect(
     host=cfg.mysql["host"],
@@ -10,8 +9,6 @@ mydb = mysql.connector.connect(
 )
 
 run = True
-
-ad.createDatabase("Agence-KJK")
 
 print("Welcome in agency data manager V1.0")
 

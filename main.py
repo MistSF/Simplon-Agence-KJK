@@ -17,3 +17,5 @@ while run :
 
     if entry == "quit" :
         run = False
+
+print('Ceci est un test')

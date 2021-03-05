@@ -5,7 +5,7 @@ TABLES = {}
 
 TABLES["Geolocation"] = ("""
     CREATE TABLE IF NOT EXISTS Geolocation (
-        zip_code_prefix VARCHAR(10) NOT NULL PRIMARY KEY,
+        zip_code_prefix VARCHAR(20) NOT NULL PRIMARY KEY,
         lat FLOAT NOT NULL,
         lng FLOAT NOT NULL,
         city VARCHAR(20),
@@ -16,8 +16,8 @@ TABLES["Geolocation"] = ("""
 TABLES["Customers"] = ("""
     CREATE TABLE IF NOT EXISTS Customers (
         customer_id VARCHAR(40) NOT NULL PRIMARY KEY,
-        customer_unique_id VARCHAR(30) NOT NULL, 
-        customer_zip_code_prefix VARCHAR(10) NOT NULL,
+        customer_unique_id VARCHAR(40) NOT NULL, 
+        customer_zip_code_prefix VARCHAR(20) NOT NULL,
         customer_city VARCHAR(20) NOT NULL,
         customer_state VARCHAR(20) NOT NULL,
         FOREIGN KEY (customer_zip_code_prefix) REFERENCES Geolocation(zip_code_prefix)
@@ -118,8 +118,23 @@ def createTable(cursor) :
     for x in TABLES :
         cursor.execute(TABLES[x])
 
-def loadData(cursor, path, name) :
+def loadData(cursor, path, name, mydb) :
+    print(name)
     data = pd.read_csv(path)
-    name = data.columns
-    for x in name :
-        print(x)
+    for i, x in enumerate(data.iloc(0)) :
+        request = "INSERT INTO {} VALUES (".format(name)
+        for y in x :
+            if type(y) == str :
+                request = request + "'" + str(y) + "', "
+            else :
+                request =request + str(y) + ", "
+        request = request[:-2] + ")"
+        try :
+            cursor.execute(request)
+            print("data added")
+        except mysql.connector.Error as err :
+            print(err)
+        if i == 10 :
+            break
+    mydb.commit()
+    print()

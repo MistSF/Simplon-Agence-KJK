@@ -1,3 +1,4 @@
+import mysql.connector
 import config as cfg
 import actionDatabase as ad
 

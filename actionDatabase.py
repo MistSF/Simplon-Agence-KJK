@@ -1,3 +1,4 @@
+from os import name
 import mysql.connector
 import pandas as pd
 
@@ -101,6 +102,9 @@ TABLES["Order_items"] = ("""
     )"""
 )
 
+def showCursor(cursor) :
+    print(pd.Series(cursor.fetchall()))
+
 def saveError(name, request, value) :
     f = open("./Error/{}.txt".format(name), "a")
     f.write("{} : {}\n{}\n\n".format(name, request, value))
@@ -122,6 +126,13 @@ def createDatabase(cursor, database) :
 def createTable(cursor) :
     for x in TABLES :
         cursor.execute(TABLES[x])
+
+def getNB(cursor, table) :
+    try :
+        cursor.execute("SELECT COUNT(0) FROM {}".format(table))
+        showCursor(cursor)
+    except mysql.connector.Error as err :
+        print(err)
 
 def loadData(cursor, path, name, mydb) :
     print(name)
@@ -146,22 +157,86 @@ def loadData(cursor, path, name, mydb) :
     mydb.commit()
     print()
 
-def getNB(cursor, table) :
+def sellers_by_state(cursor):
+    """function to select sellers by region """
+    request = """
+        SELECT seller_state, COUNT(*) 
+        FROM Sellers 
+        GROUP BY seller_state;"""
     try :
-        cursor.execute("SELECT COUNT(0) FROM {}".format(table))
-        res = cursor.fetchall()
-        print(res[0][0])
+        cursor.execute(request)
+        showCursor(cursor)
+    except mysql.connector.Error as err : 
+        saveError(name, request, err)
+        print(err)
+
+def average_orders_score(cursor):
+    """function that calculates the average score of all sellers """
+    request = "SELECT AVG(review_score) FROM Order_reviews;"
+    try :
+        cursor.execute(request)
+        showCursor(cursor)
+    except mysql.connector.Error as err :
+        saveError(name, request, err)
+        print(err)
+
+def orders_by_day(cursor,day):
+    """function that displays the number of orders made on a specific day, the day attribute requests a date in the following form (yyyy / mm / jj)"""
+    
+    request = "SELECT COUNT(*) FROM Orders WHERE order_approved_at = %s ;"(day,)
+    try : 
+        cursor.execute(request)
+        showCursor(cursor)
     except mysql.connector.Error as err :
         print(err)
 
-def getShow(cursor, table) :
+def getOrdersBy(cursor, value) :
     try :
-        cursor.execute("SELECT * FROM {}".format(table))
-        res = cursor.fetchall()
-        print(res)
+        if value == "state" :
+            cursor.execute("""
+                SELECT order_status, COUNT(*) 
+                FROM `Agence_KJK`.`Orders` 
+                GROUP BY order_status;""")
+        elif value == "month" :
+            cursor.execute("""
+                SELECT  EXTRACT(YEAR_MONTH FROM order_purchase_timestamp) AS YM, COUNT(*)
+                FROM  `Agence_KJK`.`Orders`
+                GROUP BY YM
+                ORDER BY YM
+            """)
+        showCursor(cursor)
     except mysql.connector.Error as err :
         print(err)
 
+
+def order_price(cursor, value):
+    """function which gives the smallest or the biggest value of the commands, in fonction of argument value"""
+    request = "SELECT {}(payment_value) FROM Order_payments ;".format(value)
+    try : 
+        cursor.execute(request)
+        showCursor(cursor)
+    except mysql.connector.Error as err :
+        saveError(name, request, err)
+        print(err)
+
+def average_delivery_time(cursor):
+    """function that calculates the average delivery time """
+    request = "SELECT AVG(DATEDIFF(order_delivered_customer_date, order_delivered_carrier_date)) FROM Orders ; " 
+    try : 
+        cursor.execute(request)
+        showCursor(cursor)
+    except mysql.connector.Error as err :
+        saveError(name, request, err)
+        print(err)
+
+def getNbProductsByCategory(cursor) :
+    try :
+        cursor.execute("SELECT product_category_name, COUNT(*) FROM Products GROUP BY product_category_name")
+        showCursor(cursor)
+    except mysql.connector.Error as err :
+        print(err)
+
+<<<<<<< HEAD
 def getAvgNB(cursor, table, column) :
     try :
         cursor.execute("SELECT AVG({}) FROM {}".format(column, table))
@@ -169,3 +244,31 @@ def getAvgNB(cursor, table, column) :
         print(round((res[0][0]),2))
     except mysql.connector.Error as err :
             print(err)    
+=======
+def getNbProductsSelledByCategory(cursor) :
+    try :
+        cursor.execute("""
+            SELECT Products.Product_category_name, COUNT(*) 
+            FROM Order_items
+            INNER JOIN Products ON Order_items.product_id = Products.product_id
+            GROUP BY Product_category_name
+            ORDER BY Product_category_name
+        """)
+        showCursor(cursor)
+    except mysql.connector.Error as err :
+        print(err)
+
+
+def getNbOrdersByCities(cursor) :
+    try :
+        cursor.execute("""
+            SELECT Sellers.seller_city, COUNT(*) 
+            FROM Order_items
+            INNER JOIN Sellers ON Order_items.seller_id = Sellers.seller_id
+            GROUP BY seller_city
+            ORDER BY seller_city
+        """)
+        showCursor(cursor)
+    except mysql.connector.Error as err :
+        print(err)
+>>>>>>> a0979826ad314b012dcf519583369348e413df4a

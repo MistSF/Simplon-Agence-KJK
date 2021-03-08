@@ -158,9 +158,8 @@ def sellers_by_state(cursor,seller_state):
         print(err)
     print(view)
 
-def average_sellers_score():
+def average_orders_score(cursor):
     """function that calculates the average score of all sellers """
-    cursor = None
     request = "SELECT AVG(review_score) FROM Order_reviews;"
     try :
         view = cursor.execute(request)
@@ -169,10 +168,23 @@ def average_sellers_score():
         print(err)
     print(view)
 
-def orders_by_day(day):
+
+
+def orders_by_day(cursor,day):
     """function that displays the number of orders made on a specific day, the day attribute requests a date in the following form (mm / dd / yyyy)"""
-    cursor = None
+    
     request = "SELECT COUNT(*) FROM Orders WHERE order_approved_at = %s ;"(day,)
+    try : 
+        view = cursor.execute(request)
+    except mysql.connector.Error as err :
+        saveError(name, request, err)
+        print(err)
+    print(view)
+
+
+def order_price(cursor, value):
+    """function which gives the smallest or the biggest value of the commands, in fonction of argument value"""
+    request = "SELECT {}(payment_value) FROM Order_payments ;".format(value)
     try : 
         view = cursor.execute(request)
     except mysql.connector.Error as err :

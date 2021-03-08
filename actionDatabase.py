@@ -235,3 +235,15 @@ def getNbProductsByCategory(cursor) :
         showCursor(cursor)
     except mysql.connector.Error as err :
         print(err)
+
+def getNbProductsSelledByCategory(cursor) :
+    try :
+        cursor.execute("""
+            SELECT Products.Product_category_name, COUNT(*) 
+            FROM Order_items
+            INNER JOIN Products ON Order_items.product_id = Products.product_id
+            GROUP BY Product_category_name
+        """)
+        showCursor(cursor)
+    except mysql.connector.Error as err :
+        print(err)

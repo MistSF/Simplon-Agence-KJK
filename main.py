@@ -23,3 +23,14 @@ while run :
 
     if entry == "quit" :
         run = False
+    elif entry == "get nb customers" :
+        ad.getNB(cursor, "Customers")
+    elif entry == "get nb products" :
+        ad.getNB(cursor, "Products")
+    elif entry == "get nb orders" :
+        ad.getNB(cursor, "Orders")
+    elif entry == "get nb sellers" :
+        ad.getNB(cursor, "Sellers")
+
+    elif entry == "show products" :
+        ad.getShow(cursor, "Products")

@@ -8,6 +8,7 @@ TABLES["Geolocation"] = ("""
         zip_code_prefix VARCHAR(20) NOT NULL PRIMARY KEY,
         lat FLOAT NOT NULL,
         lng FLOAT NOT NULL,
+        city VARCHAR(40),
         state VARCHAR(20)
     )"""
 )
@@ -145,6 +146,3 @@ def loadData(cursor, path, name, mydb) :
     mydb.commit()
     print()
 
-def add_customer():
-    """fonction for add a new customer in customers table """    
-    request = "INSERT INTO "

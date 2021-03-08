@@ -1,3 +1,4 @@
+from os import name
 import mysql.connector
 import pandas as pd
 
@@ -145,4 +146,15 @@ def loadData(cursor, path, name, mydb) :
 
     mydb.commit()
     print()
+
+def sellers_by_state(cursor,seller_state):
+    """fonction to select sellers by region """
+    request = "SELECT * FROM Sellers WHERE seller_state = %s;" , (seller_state,)
+    
+    try :
+        view = cursor.execute(request)    
+    except mysql.connector.Error as err : 
+        saveError(name, request, err)
+        print(err)
+    print(view)
 

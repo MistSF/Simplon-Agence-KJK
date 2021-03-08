@@ -148,7 +148,7 @@ def loadData(cursor, path, name, mydb) :
     print()
 
 def sellers_by_state(cursor,seller_state):
-    """fonction to select sellers by region """
+    """function to select sellers by region """
     request = "SELECT * FROM Sellers WHERE seller_state = %s;" , (seller_state,)
     
     try :
@@ -158,3 +158,24 @@ def sellers_by_state(cursor,seller_state):
         print(err)
     print(view)
 
+def average_sellers_score():
+    """function that calculates the average score of all sellers """
+    cursor = None
+    request = "SELECT AVG(review_score) FROM Order_reviews;"
+    try :
+        view = cursor.execute(request)
+    except mysql.connector.Error as err :
+        saveError(name, request, err)
+        print(err)
+    print(view)
+
+def orders_by_day(day):
+    """function that displays the number of orders made on a specific day, the day attribute requests a date in the following form (mm / dd / yyyy)"""
+    cursor = None
+    request = "SELECT COUNT(*) FROM Orders WHERE order_approved_at = %s ;"(day,)
+    try : 
+        view = cursor.execute(request)
+    except mysql.connector.Error as err :
+        saveError(name, request, err)
+        print(err)
+    print(view)

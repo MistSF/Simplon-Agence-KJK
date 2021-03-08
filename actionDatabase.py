@@ -102,7 +102,8 @@ TABLES["Order_items"] = ("""
     )"""
 )
 
-COMMANDS = {}
+def showCursor(cursor) :
+    print(pd.Series(cursor.fetchall()))
 
 def saveError(name, request, value) :
     f = open("./Error/{}.txt".format(name), "a")
@@ -129,8 +130,7 @@ def createTable(cursor) :
 def getNB(cursor, table) :
     try :
         cursor.execute("SELECT COUNT(0) FROM {}".format(table))
-        res = cursor.fetchall()
-        print(res[0][0])
+        showCursor(cursor)
     except mysql.connector.Error as err :
         print(err)
 
@@ -165,8 +165,7 @@ def sellers_by_state(cursor):
         GROUP BY seller_state;"""
     try :
         cursor.execute(request)
-        res = cursor.fetchall()
-        print(pd.Series(res))    
+        showCursor(cursor)
     except mysql.connector.Error as err : 
         saveError(name, request, err)
         print(err)
@@ -176,11 +175,10 @@ def average_orders_score(cursor):
     request = "SELECT AVG(review_score) FROM Order_reviews;"
     try :
         cursor.execute(request)
-        view = cursor.fetchall()
+        showCursor(cursor)
     except mysql.connector.Error as err :
         saveError(name, request, err)
         print(err)
-    print(view)
 
 def orders_by_day(cursor,day):
     """function that displays the number of orders made on a specific day, the day attribute requests a date in the following form (yyyy / mm / jj)"""
@@ -188,8 +186,7 @@ def orders_by_day(cursor,day):
     request = "SELECT COUNT(*) FROM Orders WHERE order_approved_at = %s ;"(day,)
     try : 
         cursor.execute(request)
-        res = cursor.fetchall()
-        print(res)
+        showCursor(cursor)
     except mysql.connector.Error as err :
         print(err)
 
@@ -207,9 +204,7 @@ def getOrdersBy(cursor, value) :
                 GROUP BY YM
                 ORDER BY YM
             """)
-        res = cursor.fetchall()
-        res = pd.Series(res)
-        print(res)
+        showCursor(cursor)
     except mysql.connector.Error as err :
         print(err)
 
@@ -219,26 +214,24 @@ def order_price(cursor, value):
     request = "SELECT {}(payment_value) FROM Order_payments ;".format(value)
     try : 
         cursor.execute(request)
-        view = cursor.fetchall()
+        showCursor(cursor)
     except mysql.connector.Error as err :
         saveError(name, request, err)
         print(err)
-    print(view)
 
 def average_delivery_time(cursor):
     """function that calculates the average delivery time """
     request = "SELECT AVG(DATEDIFF(order_delivered_customer_date, order_delivered_carrier_date)) FROM Orders ; " 
     try : 
-        view = cursor.execute(request)
+        cursor.execute(request)
+        showCursor(cursor)
     except mysql.connector.Error as err :
         saveError(name, request, err)
         print(err)
-    print(view)
 
 def getNbProductsByCategory(cursor) :
     try :
         cursor.execute("SELECT product_category_name, COUNT(*) FROM Products GROUP BY product_category_name")
-        res = cursor.fetchall()
-        print(pd.Series(res))
+        showCursor(cursor)
     except mysql.connector.Error as err :
         print(err)

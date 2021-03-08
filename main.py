@@ -39,7 +39,7 @@ while run :
         ad.sellers_by_state(cursor)
     elif entry == "average orders score" :
         ad.average_orders_score(cursor)
-    elif entry == "orders by day" :
+    elif entry == "orders by day" : #/!\
         ad.orders_by_day(cursor)
     elif entry == "order min price" :
         ad.order_price(cursor, "MIN")

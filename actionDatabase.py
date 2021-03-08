@@ -145,3 +145,19 @@ def loadData(cursor, path, name, mydb) :
 
     mydb.commit()
     print()
+
+def getNB(cursor, table) :
+    try :
+        cursor.execute("SELECT COUNT(0) FROM {}".format(table))
+        res = cursor.fetchall()
+        print(res[0][0])
+    except mysql.connector.Error as err :
+        print(err)
+
+def getShow(cursor, table) :
+    try :
+        cursor.execute("SELECT * FROM {}".format(table))
+        res = cursor.fetchall()
+        print(res)
+    except mysql.connector.Error as err :
+        print(err)

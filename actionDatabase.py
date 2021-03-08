@@ -236,13 +236,14 @@ def getNbProductsByCategory(cursor) :
     except mysql.connector.Error as err :
         print(err)
 
-def getAvgNB(cursor, table, column) :
+def getAvgNB(cursor) :
     try :
-        cursor.execute("SELECT AVG({}) FROM {}".format(column, table))
+        cursor.execute("SELECT AVG(payment_value) FROM Order_payments")
         res = cursor.fetchall()
         print(round((res[0][0]),2))
     except mysql.connector.Error as err :
             print(err)    
+
 def getNbProductsSelledByCategory(cursor) :
     try :
         cursor.execute("""

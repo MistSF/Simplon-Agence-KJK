@@ -57,3 +57,5 @@ while run :
         ad.getNbProductsByCategory(cursor)
     elif entry == "get nb orders by cities" :
         ad.getNbOrdersByCities(cursor)
+    elif entry == "get average basket" :
+        ad.getAvgNB(cursor)

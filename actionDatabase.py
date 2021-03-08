@@ -171,7 +171,7 @@ def average_orders_score(cursor):
 
 
 def orders_by_day(cursor,day):
-    """function that displays the number of orders made on a specific day, the day attribute requests a date in the following form (mm / dd / yyyy)"""
+    """function that displays the number of orders made on a specific day, the day attribute requests a date in the following form (yyyy / mm / jj)"""
     
     request = "SELECT COUNT(*) FROM Orders WHERE order_approved_at = %s ;"(day,)
     try : 
@@ -185,6 +185,16 @@ def orders_by_day(cursor,day):
 def order_price(cursor, value):
     """function which gives the smallest or the biggest value of the commands, in fonction of argument value"""
     request = "SELECT {}(payment_value) FROM Order_payments ;".format(value)
+    try : 
+        view = cursor.execute(request)
+    except mysql.connector.Error as err :
+        saveError(name, request, err)
+        print(err)
+    print(view)
+
+def average_delivery_time(cursor):
+    """function that calculates the average delivery time """
+    request = "SELECT AVG(DATEDIFF(order_delivered_customer_date, order_delivered_carrier_date)) FROM Orders ; " 
     try : 
         view = cursor.execute(request)
     except mysql.connector.Error as err :

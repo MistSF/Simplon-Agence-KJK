@@ -243,6 +243,21 @@ def getNbProductsSelledByCategory(cursor) :
             FROM Order_items
             INNER JOIN Products ON Order_items.product_id = Products.product_id
             GROUP BY Product_category_name
+            ORDER BY Product_category_name
+        """)
+        showCursor(cursor)
+    except mysql.connector.Error as err :
+        print(err)
+
+
+def getNbOrdersByCities(cursor) :
+    try :
+        cursor.execute("""
+            SELECT Sellers.seller_city, COUNT(*) 
+            FROM Order_items
+            INNER JOIN Sellers ON Order_items.seller_id = Sellers.seller_id
+            GROUP BY seller_city
+            ORDER BY seller_city
         """)
         showCursor(cursor)
     except mysql.connector.Error as err :

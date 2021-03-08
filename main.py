@@ -49,3 +49,5 @@ while run :
         ad.average_delivery_time(cursor)
     elif entry == "get nb products by category" :
         ad.getNbProductsByCategory(cursor)
+    elif entry == "get nb orders by cities" :
+        ad.getNbOrdersByCities(cursor)

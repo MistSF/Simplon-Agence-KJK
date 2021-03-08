@@ -5,10 +5,10 @@ TABLES = {}
 
 TABLES["Geolocation"] = ("""
     CREATE TABLE IF NOT EXISTS Geolocation (
-        zip_code_prefix VARCHAR(10) NOT NULL PRIMARY KEY,
+        zip_code_prefix VARCHAR(20) NOT NULL PRIMARY KEY,
         lat FLOAT NOT NULL,
         lng FLOAT NOT NULL,
-        city VARCHAR(20),
+        city VARCHAR(40),
         state VARCHAR(20)
     )"""
 )
@@ -16,9 +16,9 @@ TABLES["Geolocation"] = ("""
 TABLES["Customers"] = ("""
     CREATE TABLE IF NOT EXISTS Customers (
         customer_id VARCHAR(40) NOT NULL PRIMARY KEY,
-        customer_unique_id VARCHAR(30) NOT NULL, 
-        customer_zip_code_prefix VARCHAR(10) NOT NULL,
-        customer_city VARCHAR(20) NOT NULL,
+        customer_unique_id VARCHAR(40) NOT NULL, 
+        customer_zip_code_prefix VARCHAR(20) NOT NULL,
+        customer_city VARCHAR(40) NOT NULL,
         customer_state VARCHAR(20) NOT NULL,
         FOREIGN KEY (customer_zip_code_prefix) REFERENCES Geolocation(zip_code_prefix)
     )"""
@@ -75,7 +75,7 @@ TABLES["Sellers"] = ("""
 TABLES["Products"] = (""" 
     CREATE TABLE IF NOT EXISTS Products (
         product_id VARCHAR(40) NOT NULL PRIMARY KEY,
-        product_category_name VARCHAR(40),
+        product_category_name VARCHAR(80),
         product_name_lenght INT,
         product_description_lenght INT,
         product_photos_qty INT,
@@ -101,6 +101,11 @@ TABLES["Order_items"] = ("""
     )"""
 )
 
+def saveError(name, request, value) :
+    f = open("./Error/{}.txt".format(name), "a")
+    f.write("{} : {}\n{}\n\n".format(name, request, value))
+    f.close()
+
 def createDatabase(cursor, database) :
     request = "CREATE DATABASE {}".format(database)
     try :
@@ -118,8 +123,49 @@ def createTable(cursor) :
     for x in TABLES :
         cursor.execute(TABLES[x])
 
-def loadData(cursor, path, name) :
+def loadData(cursor, path, name, mydb) :
+    print(name)
     data = pd.read_csv(path)
-    name = data.columns
-    for x in name :
-        print(x)
+    data.drop_duplicates(subset=[data.columns[0]], keep="first", inplace=True)
+    for x in data.iloc(0) :
+        request = "INSERT INTO {} VALUES (".format(name)
+        for y in x :
+            if type(y) == str :
+                request = request + "\"" + str(y) + "\", "
+            elif str(y) == 'nan' :
+                request = request + "NULL , "
+            else :
+                request =request + str(y) + ", "
+        request = request[:-2] + ")"
+        try :
+            cursor.execute(request)
+        except mysql.connector.Error as err :
+            saveError(name, request, err)
+            print(err)
+
+    mydb.commit()
+    print()
+
+def getNB(cursor, table) :
+    try :
+        cursor.execute("SELECT COUNT(0) FROM {}".format(table))
+        res = cursor.fetchall()
+        print(res[0][0])
+    except mysql.connector.Error as err :
+        print(err)
+
+def getShow(cursor, table) :
+    try :
+        cursor.execute("SELECT * FROM {}".format(table))
+        res = cursor.fetchall()
+        print(res)
+    except mysql.connector.Error as err :
+        print(err)
+
+def getAvgNB(cursor, table, column) :
+    try :
+        cursor.execute("SELECT AVG({}) FROM {}".format(column, table))
+        res = cursor.fetchall()
+        print(round((res[0][0]),2))
+    except mysql.connector.Error as err :
+            print(err)    

@@ -12,17 +12,26 @@ mydb = mysql.connector.connect(
 run = True
 
 cursor = mydb.cursor(buffered=True)
-
 ad.createDatabase(cursor, "Agence_KJK")
-ad.createTable(cursor)
 
 print("Welcome in agency data manager V1.0")
-
-ad.loadData(cursor, "./Data/olist_orders_dataset.csv", "Orders")
 
 while run :
     entry = input()
 
     if entry == "quit" :
         run = False
+    elif entry == "get nb customers" :
+        ad.getNB(cursor, "Customers")
+    elif entry == "get nb products" :
+        ad.getNB(cursor, "Products")
+    elif entry == "get nb orders" :
+        ad.getNB(cursor, "Orders")
+    elif entry == "get nb sellers" :
+        ad.getNB(cursor, "Sellers")
 
+    elif entry == "show products" :
+        ad.getShow(cursor, "Products")
+
+    elif entry == "show avg payment" :
+        ad.getAvgNB(cursor, "Order_payments", 'payment_value')

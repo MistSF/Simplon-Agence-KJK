@@ -1,7 +1,6 @@
 import mysql.connector
 import config as cfg
 import actionDatabase as ad
-
 mydb = mysql.connector.connect(
     host=cfg.mysql["host"],
     user=cfg.mysql["user"],
@@ -11,9 +10,11 @@ mydb = mysql.connector.connect(
 
 run = True
 
+
 cursor = mydb.cursor(buffered=True)
 
 ad.createDatabase(cursor, "Agence_KJK")
+
 
 print("Welcome in agency data manager V1.0")
 
@@ -34,5 +35,17 @@ while run :
         ad.getOrdersBy(cursor, "state")
     elif entry == "get orders by month" :
         ad.getOrdersBy(cursor, "month")
-    elif entry == "show products" :
-        ad.getShow(cursor, "Products")
+    elif entry == "sellers by state" :
+        ad.sellers_by_state(cursor)
+    elif entry == "average orders score" :
+        ad.average_orders_score(cursor)
+    elif entry == "orders by day" :
+        ad.orders_by_day(cursor)
+    elif entry == "order min price" :
+        ad.order_price(cursor, "MIN")
+    elif entry == "order max price" :
+        ad.order_price(cursor, "MAX")
+    elif entry == "average delivery time" :
+        ad.average_delivery_time(cursor)
+    elif entry == "get nb products by category" :
+        ad.getNbProductsByCategory(cursor)

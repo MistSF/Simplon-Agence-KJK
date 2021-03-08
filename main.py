@@ -30,6 +30,9 @@ while run :
         ad.getNB(cursor, "Orders")
     elif entry == "get nb sellers" :
         ad.getNB(cursor, "Sellers")
-
+    elif entry == "get orders by state" :
+        ad.getOrdersBy(cursor, "state")
+    elif entry == "get orders by month" :
+        ad.getOrdersBy(cursor, "month")
     elif entry == "show products" :
         ad.getShow(cursor, "Products")

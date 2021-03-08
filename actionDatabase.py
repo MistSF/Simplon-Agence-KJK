@@ -161,3 +161,23 @@ def getShow(cursor, table) :
         print(res)
     except mysql.connector.Error as err :
         print(err)
+
+def getOrdersBy(cursor, value) :
+    try :
+        if value == "state" :
+            cursor.execute("""
+                SELECT order_status, COUNT(*) 
+                FROM `Agence_KJK`.`Orders` 
+                GROUP BY order_status;""")
+        elif value == "month" :
+            cursor.execute("""
+                SELECT  EXTRACT(YEAR_MONTH FROM order_purchase_timestamp) AS YM, COUNT(*)
+                FROM  `Agence_KJK`.`Orders`
+                GROUP BY YM
+                ORDER BY YM
+            """)
+        res = cursor.fetchall()
+        res = pd.Series(res)
+        print(res)
+    except mysql.connector.Error as err :
+        print(err)

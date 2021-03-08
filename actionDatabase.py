@@ -170,10 +170,10 @@ def average_orders_score(cursor):
 
 
 
-def orders_by_day(cursor,day):
+def orders_by_day(cursor):
     """function that displays the number of orders made on a specific day, the day attribute requests a date in the following form (yyyy / mm / jj)"""
     
-    request = "SELECT COUNT(*) FROM Orders WHERE order_approved_at = %s ;"(day,)
+    request = "SELECT EXTRACT(COUNT(order_id), order_approuved_at FROM Orders GROUP BY order_approuved_at);"
     try : 
         view = cursor.execute(request)
     except mysql.connector.Error as err :
@@ -201,3 +201,4 @@ def average_delivery_time(cursor):
         saveError(name, request, err)
         print(err)
     print(view)
+

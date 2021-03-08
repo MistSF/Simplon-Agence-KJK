@@ -236,7 +236,6 @@ def getNbProductsByCategory(cursor) :
     except mysql.connector.Error as err :
         print(err)
 
-<<<<<<< HEAD
 def getAvgNB(cursor, table, column) :
     try :
         cursor.execute("SELECT AVG({}) FROM {}".format(column, table))
@@ -244,7 +243,6 @@ def getAvgNB(cursor, table, column) :
         print(round((res[0][0]),2))
     except mysql.connector.Error as err :
             print(err)    
-=======
 def getNbProductsSelledByCategory(cursor) :
     try :
         cursor.execute("""
@@ -271,4 +269,3 @@ def getNbOrdersByCities(cursor) :
         showCursor(cursor)
     except mysql.connector.Error as err :
         print(err)
->>>>>>> a0979826ad314b012dcf519583369348e413df4a

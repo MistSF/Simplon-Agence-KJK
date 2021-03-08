@@ -10,11 +10,7 @@ mydb = mysql.connector.connect(
 
 run = True
 
-<<<<<<< HEAD
-=======
-
 cursor = mydb.cursor(buffered=True)
->>>>>>> a0979826ad314b012dcf519583369348e413df4a
 
 cursor = mydb.cursor(buffered=True)
 ad.createDatabase(cursor, "Agence_KJK")
@@ -35,15 +31,12 @@ while run :
         ad.getNB(cursor, "Orders")
     elif entry == "get nb sellers" :
         ad.getNB(cursor, "Sellers")
-<<<<<<< HEAD
 
     elif entry == "show products" :
         ad.getShow(cursor, "Products")
 
     elif entry == "show avg payment" :
         ad.getAvgNB(cursor, "Order_payments", 'payment_value')
-=======
->>>>>>> a0979826ad314b012dcf519583369348e413df4a
     elif entry == "get orders by state" :
         ad.getOrdersBy(cursor, "state")
     elif entry == "get orders by month" :
@@ -62,8 +55,5 @@ while run :
         ad.average_delivery_time(cursor)
     elif entry == "get nb products by category" :
         ad.getNbProductsByCategory(cursor)
-<<<<<<< HEAD
-=======
     elif entry == "get nb orders by cities" :
         ad.getNbOrdersByCities(cursor)
->>>>>>> a0979826ad314b012dcf519583369348e413df4a

@@ -270,3 +270,14 @@ def getNbOrdersByCities(cursor) :
         showCursor(cursor)
     except mysql.connector.Error as err :
         print(err)
+
+def avgDeliveryTimeByMonth(cursor) :
+    try :
+        cursor.execute("""
+        SELECT AVG(DATEDIFF(order_delivered_customer_date, order_delivered_carrier_date)) AS average_delivery_time, EXTRACT(YEAR_MONTH FROM order_purchase_timestamp) AS purchase
+        FROM `Agence_KJK`.`Orders`
+        GROUP BY purchase
+        ORDER BY purchase""")
+        showCursor(cursor)
+    except mysql.connector.Error as err :
+        print(err)

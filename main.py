@@ -31,10 +31,8 @@ while run :
         ad.getNB(cursor, "Orders")
     elif entry == "get nb sellers" :
         ad.getNB(cursor, "Sellers")
-
     elif entry == "show products" :
         ad.getShow(cursor, "Products")
-
     elif entry == "show avg payment" :
         ad.getAvgNB(cursor, "Order_payments", 'payment_value')
     elif entry == "get orders by state" :
@@ -59,3 +57,5 @@ while run :
         ad.getNbOrdersByCities(cursor)
     elif entry == "get average basket" :
         ad.getAvgNB(cursor)
+    elif entry == "delivery time by month" :
+        ad.avgDeliveryTimeByMonth(cursor)

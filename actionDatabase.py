@@ -6,6 +6,19 @@ import string
 import random
 import dictionnary as dc
 
+def help():
+    for x in dc.REQUEST :
+        print(x)
+    print("get nb customers")
+    print("get nb products")
+    print("get nb orders")
+    print("get nb sellers")
+    print("show avg payment")
+    print("get average basket")
+    print("new product")
+    print("help")
+    print("quit")
+
 def get_random_string(length):
     letters = string.ascii_letters + "0123456789"
     result_str = ''.join(random.choice(letters) for i in range(length))

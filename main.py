@@ -25,20 +25,10 @@ while run :
 
     if entry in dc.REQUEST :
         ad.getRequest(cursor, dc.REQUEST[entry])
-
     if entry == "quit" :
         run = False
     elif entry == "help" :
-        for x in dc.REQUEST :
-            print(x)
-        print("get nb customers")
-        print("get nb products")
-        print("get nb orders")
-        print("get nb sellers")
-        print("show avg payment")
-        print("get average basket")
-        print("new product\n")
-
+        ad.help()
     elif entry == "get nb customers" :
         ad.getNB(cursor, "Customers")
     elif entry == "get nb products" :

@@ -1,6 +1,8 @@
 import mysql.connector
 import config as cfg
 import actionDatabase as ad
+import dictionnary as dc
+
 mydb = mysql.connector.connect(
     host=cfg.mysql["host"],
     user=cfg.mysql["user"],
@@ -19,10 +21,24 @@ ad.createDatabase(cursor, "Agence_KJK")
 print("Welcome in agency data manager V1.0")
 
 while run :
-    entry = input()
+    entry = input().lower()
+
+    if entry in dc.REQUEST :
+        ad.getRequest(cursor, dc.REQUEST[entry])
 
     if entry == "quit" :
         run = False
+    elif entry == "help" :
+        for x in dc.REQUEST :
+            print(x)
+        print("get nb customers")
+        print("get nb products")
+        print("get nb orders")
+        print("get nb sellers")
+        print("show avg payment")
+        print("get average basket")
+        print("new product\n")
+
     elif entry == "get nb customers" :
         ad.getNB(cursor, "Customers")
     elif entry == "get nb products" :
@@ -34,32 +50,8 @@ while run :
     elif entry == "show products" :
         ad.getShow(cursor, "Products")
     elif entry == "show avg payment" :
-        ad.getAvgNB(cursor, "Order_payments", 'payment_value')
-    elif entry == "get orders by state" :
-        ad.getOrdersBy(cursor, "state")
-    elif entry == "get orders by month" :
-        ad.getOrdersBy(cursor, "month")
-    elif entry == "sellers by state" :
-        ad.sellers_by_state(cursor)
-    elif entry == "average orders score" :
-        ad.average_orders_score(cursor)
-    elif entry == "orders by day" : #/!\
-        ad.orders_by_day(cursor)
-    elif entry == "order min price" :
-        ad.order_price(cursor, "MIN")
-    elif entry == "order max price" :
-        ad.order_price(cursor, "MAX")
-    elif entry == "average delivery time" :
-        ad.average_delivery_time(cursor)
-    elif entry == "get nb products by category" :
-        ad.getNbProductsByCategory(cursor)
-    elif entry == "get nb orders by cities" :
-        ad.getNbOrdersByCities(cursor)
+        ad.getAvgNB(cursor)
     elif entry == "get average basket" :
         ad.getAvgNB(cursor)
-    elif entry == "delivery time by month" :
-        ad.avgDeliveryTimeByMonth(cursor)
-    elif entry == "average orders by day" :
-        ad.averageOrdersByDay(cursor)
     elif entry == "new product" :
         ad.newProduct(cursor, mydb)

@@ -281,3 +281,14 @@ def avgDeliveryTimeByMonth(cursor) :
         showCursor(cursor)
     except mysql.connector.Error as err :
         print(err)
+
+def averageOrdersByDay(cursor) :
+    try :
+        cursor.execute("""
+        SELECT AVG(byday) AS AVERAGE
+        FROM (SELECT order_purchase_timestamp, COUNT(*) AS byday
+        FROM `Agence_KJK`.`Orders` GROUP BY order_purchase_timestamp) AS A"""
+        )
+        showCursor(cursor)
+    except mysql.connector.Error as err :
+        print(err)

@@ -59,3 +59,5 @@ while run :
         ad.getAvgNB(cursor)
     elif entry == "delivery time by month" :
         ad.avgDeliveryTimeByMonth(cursor)
+    elif entry == "average orders by day" :
+        ad.averageOrdersByDay(cursor)

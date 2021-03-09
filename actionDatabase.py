@@ -9,10 +9,6 @@ import dictionnary as dc
 def help():
     for x in dc.REQUEST :
         print(x)
-    print("get nb customers")
-    print("get nb products")
-    print("get nb orders")
-    print("get nb sellers")
     print("show avg payment")
     print("get average basket")
     print("new product")
@@ -71,14 +67,6 @@ def loadData(cursor, path, name, mydb) :
 
     mydb.commit()
     print()
-
-def getNB(cursor, table) :
-    try :
-        cursor.execute("SELECT COUNT(0) FROM {}".format(table))
-        res = showCursor(cursor)
-        print(res)
-    except mysql.connector.Error as err :
-        print(err)
 
 def getAvgNB(cursor) :
     try :

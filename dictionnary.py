@@ -157,3 +157,15 @@ REQUEST["order min price"] ="""
 REQUEST["order max price"] ="""
     SELECT MAX(payment_value) FROM Order_payments ;
 """
+REQUEST["get nb customers"] = """
+    SELECT COUNT(0) FROM Customers
+"""
+REQUEST["get nb products"] = """
+    SELECT COUNT(0) FROM Products
+"""
+REQUEST["get nb orders"] = """
+    SELECT COUNT(0) FROM Orders
+"""
+REQUEST["get nb sellers"] = """
+    SELECT COUNT(0) FROM Sellers
+"""

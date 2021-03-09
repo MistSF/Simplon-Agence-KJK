@@ -141,11 +141,9 @@ REQUEST["get orders by state"] = """
     FROM `Agence_KJK`.`Orders` 
     GROUP BY order_status;
 """
-
 REQUEST["average orders score"] = """
     SELECT AVG(review_score) FROM Order_reviews;
 """
-
 REQUEST["get nb selled by category"] = """
     SELECT Products.Product_category_name, COUNT(*) 
     FROM Order_items
@@ -153,11 +151,9 @@ REQUEST["get nb selled by category"] = """
     GROUP BY Product_category_name
     ORDER BY Product_category_name
 """
-
 REQUEST["order min price"] ="""
     SELECT MIN(payment_value) FROM Order_payments ;
 """
-
 REQUEST["order max price"] ="""
     SELECT MAX(payment_value) FROM Order_payments ;
 """

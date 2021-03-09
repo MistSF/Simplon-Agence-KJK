@@ -25,6 +25,7 @@ while run :
 
     if entry in dc.REQUEST :
         ad.getRequest(cursor, dc.REQUEST[entry])
+        
     if entry == "quit" :
         run = False
     elif entry == "help" :
@@ -37,8 +38,6 @@ while run :
         ad.getNB(cursor, "Orders")
     elif entry == "get nb sellers" :
         ad.getNB(cursor, "Sellers")
-    elif entry == "show products" :
-        ad.getShow(cursor, "Products")
     elif entry == "show avg payment" :
         ad.getAvgNB(cursor)
     elif entry == "get average basket" :

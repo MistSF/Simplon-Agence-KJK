@@ -61,3 +61,5 @@ while run :
         ad.avgDeliveryTimeByMonth(cursor)
     elif entry == "average orders by day" :
         ad.averageOrdersByDay(cursor)
+    elif entry == "new product" :
+        ad.newProduct(cursor, mydb)

@@ -1,6 +1,9 @@
 from os import name
+import numpy as np
 import mysql.connector
 import pandas as pd
+import string
+import random
 
 TABLES = {}
 
@@ -102,8 +105,13 @@ TABLES["Order_items"] = ("""
     )"""
 )
 
+def get_random_string(length):
+    letters = string.ascii_letters + "0123456789"
+    result_str = ''.join(random.choice(letters) for i in range(length))
+    return result_str
+
 def showCursor(cursor) :
-    print(pd.Series(cursor.fetchall()))
+    return pd.Series(cursor.fetchall())
 
 def saveError(name, request, value) :
     f = open("./Error/{}.txt".format(name), "a")
@@ -130,7 +138,8 @@ def createTable(cursor) :
 def getNB(cursor, table) :
     try :
         cursor.execute("SELECT COUNT(0) FROM {}".format(table))
-        showCursor(cursor)
+        res = showCursor(cursor)
+        print(res)
     except mysql.connector.Error as err :
         print(err)
 
@@ -165,7 +174,8 @@ def sellers_by_state(cursor):
         GROUP BY seller_state;"""
     try :
         cursor.execute(request)
-        showCursor(cursor)
+        res = showCursor(cursor)
+        print(res)
     except mysql.connector.Error as err : 
         saveError(name, request, err)
         print(err)
@@ -175,7 +185,8 @@ def average_orders_score(cursor):
     request = "SELECT AVG(review_score) FROM Order_reviews;"
     try :
         cursor.execute(request)
-        showCursor(cursor)
+        res = showCursor(cursor)
+        print(res)
     except mysql.connector.Error as err :
         saveError(name, request, err)
         print(err)
@@ -186,7 +197,8 @@ def orders_by_day(cursor,day):
     request = "SELECT COUNT(*) FROM Orders WHERE order_approved_at = %s ;"(day,)
     try : 
         cursor.execute(request)
-        showCursor(cursor)
+        res = showCursor(cursor)
+        print(res)
     except mysql.connector.Error as err :
         print(err)
 
@@ -204,7 +216,8 @@ def getOrdersBy(cursor, value) :
                 GROUP BY YM
                 ORDER BY YM
             """)
-        showCursor(cursor)
+        res = showCursor(cursor)
+        print(res)
     except mysql.connector.Error as err :
         print(err)
 
@@ -214,7 +227,8 @@ def order_price(cursor, value):
     request = "SELECT {}(payment_value) FROM Order_payments ;".format(value)
     try : 
         cursor.execute(request)
-        showCursor(cursor)
+        res = showCursor(cursor)
+        print(res) 
     except mysql.connector.Error as err :
         saveError(name, request, err)
         print(err)
@@ -224,7 +238,8 @@ def average_delivery_time(cursor):
     request = "SELECT AVG(DATEDIFF(order_delivered_customer_date, order_delivered_carrier_date)) FROM Orders ; " 
     try : 
         cursor.execute(request)
-        showCursor(cursor)
+        res = showCursor(cursor)
+        print(res)
     except mysql.connector.Error as err :
         saveError(name, request, err)
         print(err)
@@ -232,7 +247,8 @@ def average_delivery_time(cursor):
 def getNbProductsByCategory(cursor) :
     try :
         cursor.execute("SELECT product_category_name, COUNT(*) FROM Products GROUP BY product_category_name")
-        showCursor(cursor)
+        res = showCursor(cursor)
+        print(res)
     except mysql.connector.Error as err :
         print(err)
 
@@ -253,7 +269,8 @@ def getNbProductsSelledByCategory(cursor) :
             GROUP BY Product_category_name
             ORDER BY Product_category_name
         """)
-        showCursor(cursor)
+        res = showCursor(cursor)
+        print(res)
     except mysql.connector.Error as err :
         print(err)
 
@@ -267,7 +284,8 @@ def getNbOrdersByCities(cursor) :
             GROUP BY seller_city
             ORDER BY seller_city
         """)
-        showCursor(cursor)
+        res = showCursor(cursor)
+        print(res)
     except mysql.connector.Error as err :
         print(err)
 
@@ -278,7 +296,8 @@ def avgDeliveryTimeByMonth(cursor) :
         FROM `Agence_KJK`.`Orders`
         GROUP BY purchase
         ORDER BY purchase""")
-        showCursor(cursor)
+        res = showCursor(cursor)
+        print(res)
     except mysql.connector.Error as err :
         print(err)
 
@@ -289,6 +308,35 @@ def averageOrdersByDay(cursor) :
         FROM (SELECT order_purchase_timestamp, COUNT(*) AS byday
         FROM `Agence_KJK`.`Orders` GROUP BY order_purchase_timestamp) AS A"""
         )
-        showCursor(cursor)
+        res = showCursor(cursor)
+        print(res)
+    except mysql.connector.Error as err :
+        print(err)
+
+def newProduct(cursor, mydb) : 
+    try :
+        cursor.execute("SELECT product_id FROM Products")
+        res = showCursor(cursor)
+        add = False
+        while add == False:
+            add = True
+            newID = get_random_string(40)
+            print(newID)
+            for x in res :
+                if x[0] == newID :
+                    add = False
+        print("category name :")
+        newCategory = input()
+        cursor.execute("""
+            INSERT INTO Products VALUES (
+            '{}','{}',{},
+            {},{},{},
+            {},{},{}
+            )""".format(
+                newID, newCategory, np.random.choice(1000),
+                np.random.choice(1000), np.random.choice(1000), np.random.choice(1000),
+                np.random.choice(1000), np.random.choice(1000), np.random.choice(1000)
+            ))
+        mydb.commit()
     except mysql.connector.Error as err :
         print(err)
